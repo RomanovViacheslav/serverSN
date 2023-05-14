@@ -27,13 +27,24 @@ export class UserController extends BaseController implements IUsers {
 				func: this.register,
 				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
-			{ path: '/login', method: 'post', func: this.login },
+			{
+				path: '/login',
+				method: 'post',
+				func: this.login,
+				middlewares: [new ValidateMiddleware(UserLoginDto)],
+			},
 		]);
 	}
-	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		console.log(req.body);
-
-		next(new HTTPError(401, 'ошибочка'));
+	async login(
+		{ body }: Request<{}, {}, UserLoginDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const result = await this.userService.validateUser(body);
+		if (!result) {
+			return next(new HTTPError(401, 'ошибочка'));
+		}
+		this.ok(res, {});
 	}
 	async register(
 		{ body }: Request<{}, {}, UserRegisterDto>,
@@ -44,6 +55,6 @@ export class UserController extends BaseController implements IUsers {
 		if (!result) {
 			return next(new HTTPError(422, 'ТАКОЙ ПОЛЬЗОВАТЕЛЬ УЖЕ СУЩЕСТВУЕТ!!!'));
 		}
-		this.ok(res, result);
+		this.ok(res, { email: result.email, id: result.id });
 	}
 }
