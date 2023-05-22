@@ -53,8 +53,9 @@ export class UserController extends BaseController implements IUsers {
 	): Promise<void> {
 		const result = await this.userService.createUser(body);
 		if (!result) {
-			return next(new HTTPError(422, 'ТАКОЙ ПОЛЬЗОВАТЕЛЬ УЖЕ СУЩЕСТВУЕТ!!!'));
+			return next(new HTTPError(422, 'ТАКОЙ ПОЛЬЗОВАТЕЛЬ УЖЕ СУЩЕСТВУЕТ'));
 		}
-		this.ok(res, { email: result.email, id: result.id });
+		const { password, ...resultWithoutPassword } = result;
+		this.ok(res, resultWithoutPassword);
 	}
 }

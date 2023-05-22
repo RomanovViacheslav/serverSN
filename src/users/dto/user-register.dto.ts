@@ -7,4 +7,10 @@ export class UserRegisterDto {
 	password: string;
 	@IsString({ message: 'Не указано имя' })
 	name: string;
+	@IsString({ message: 'Не указано фамилия' })
+	lastName: string;
+	@IsString({ message: 'Не указан логин' })
+	login: string;
+	@IsString({ message: 'Не указан номер телефона' })
+	phoneNumber: string;
 }

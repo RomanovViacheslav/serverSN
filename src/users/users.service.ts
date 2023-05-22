@@ -16,8 +16,15 @@ export class UserService implements IUserService {
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.UsersRepository) private UsersRepository: IUsersRepository,
 	) {}
-	async createUser({ email, name, password }: UserRegisterDto): Promise<UserModel | null> {
-		const newUser = new User(email, name);
+	async createUser({
+		email,
+		name,
+		lastName,
+		login,
+		phoneNumber,
+		password,
+	}: UserRegisterDto): Promise<UserModel | null> {
+		const newUser = new User(email, name, login, lastName, phoneNumber);
 		const salt = this.configService.get<number>('SALT');
 		console.log(salt);
 
@@ -33,7 +40,13 @@ export class UserService implements IUserService {
 		if (!existedUser) {
 			return false;
 		}
-		const newUser = new User(existedUser.email, existedUser.email, existedUser.password);
+		const newUser = new User(
+			existedUser.email,
+			existedUser.name,
+			existedUser.login,
+			existedUser.lastName,
+			existedUser.phoneNumber,
+		);
 		return newUser.comparePassword(password);
 	}
 }

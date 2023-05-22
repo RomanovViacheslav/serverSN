@@ -15,5 +15,8 @@ model UserModel {
   email String
   password String
   name String
+  login String
+  lastName String
+  phoneNumber String
 }
 
