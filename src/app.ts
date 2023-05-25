@@ -11,6 +11,7 @@ import 'reflect-metadata';
 import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
+import cors from 'cors';
 
 @injectable()
 export class App {
@@ -30,6 +31,7 @@ export class App {
 	}
 
 	useMiddleware(): void {
+		this.app.use(cors());
 		this.app.use(json());
 	}
 

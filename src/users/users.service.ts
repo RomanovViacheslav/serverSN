@@ -26,8 +26,6 @@ export class UserService implements IUserService {
 	}: UserRegisterDto): Promise<UserModel | null> {
 		const newUser = new User(email, name, login, lastName, phoneNumber);
 		const salt = this.configService.get<number>('SALT');
-		console.log(salt);
-
 		await newUser.setPassword(password, salt);
 		const existedUser = await this.UsersRepository.find(email);
 		if (existedUser) {
@@ -46,6 +44,7 @@ export class UserService implements IUserService {
 			existedUser.login,
 			existedUser.lastName,
 			existedUser.phoneNumber,
+			existedUser.password,
 		);
 		return newUser.comparePassword(password);
 	}
