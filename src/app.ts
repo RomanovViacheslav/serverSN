@@ -12,6 +12,7 @@ import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
 import cors from 'cors';
+import { AuthMiddleware } from './common/auth.middleware';
 
 @injectable()
 export class App {
@@ -33,6 +34,8 @@ export class App {
 	useMiddleware(): void {
 		this.app.use(cors());
 		this.app.use(json());
+		const authMiddleware = new AuthMiddleware(this.configService.get('SECRET'));
+		this.app.use(authMiddleware.execute.bind(authMiddleware));
 	}
 
 	useRoute(): void {
