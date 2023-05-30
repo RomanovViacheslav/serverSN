@@ -27,4 +27,13 @@ export class UsersRepository implements IUsersRepository {
 			},
 		});
 	}
+	async findAll(currentUserEmail: string): Promise<UserModel[]> {
+		return this.prismaService.client.userModel.findMany({
+			where: {
+				email: {
+					not: currentUserEmail,
+				},
+			},
+		});
+	}
 }

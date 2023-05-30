@@ -9,7 +9,6 @@ import 'reflect-metadata';
 import { IUsers } from './users.interface';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
-import { User } from './user.entity';
 import { UserService } from './users.service';
 import { ValidateMiddleware } from '../common/validate.middleware';
 import { sign } from 'jsonwebtoken';
@@ -43,6 +42,12 @@ export class UserController extends BaseController implements IUsers {
 				func: this.info,
 				middlewares: [new AuthGuard()],
 			},
+			{
+				path: '/users',
+				method: 'get',
+				func: this.getAllUsers,
+				middlewares: [new AuthGuard()],
+			},
 		]);
 	}
 	async login(
@@ -73,6 +78,20 @@ export class UserController extends BaseController implements IUsers {
 	async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
 		const userInfo = await this.userService.getUserInfo(user);
 		this.ok(res, { email: userInfo?.email, id: userInfo?.id });
+	}
+
+	async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+		try {
+			const currentUserEmail = req.user;
+			const users = await this.userService.getAllUserInfo(currentUserEmail);
+			const usersLogin = users.map((user) => ({
+				login: user.login,
+				id: user.id,
+			}));
+			this.ok(res, usersLogin);
+		} catch (error) {
+			next(new HTTPError(500, 'Внутренняя ошибка сервера'));
+		}
 	}
 
 	private signJWT(email: string, secret: string): Promise<string> {
