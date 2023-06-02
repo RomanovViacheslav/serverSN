@@ -4,9 +4,9 @@ export class User {
 	private _password: string;
 	constructor(
 		private readonly _email: string,
+		private readonly _login: string,
 		private readonly _name: string,
 		private readonly _lastName: string,
-		private readonly _login: string,
 		private readonly _phoneNumber: string,
 		passwordHash?: string,
 	) {

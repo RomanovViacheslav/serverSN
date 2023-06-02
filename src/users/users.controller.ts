@@ -71,6 +71,7 @@ export class UserController extends BaseController implements IUsers {
 		if (!result) {
 			return next(new HTTPError(422, 'ТАКОЙ ПОЛЬЗОВАТЕЛЬ УЖЕ СУЩЕСТВУЕТ'));
 		}
+
 		const { password, ...resultWithoutPassword } = result;
 		this.ok(res, resultWithoutPassword);
 	}
@@ -84,12 +85,14 @@ export class UserController extends BaseController implements IUsers {
 		try {
 			const currentUserEmail = req.user;
 			const users = await this.userService.getAllUserInfo(currentUserEmail);
+
 			const usersLogin = users.map((user) => ({
 				login: user.login,
 				id: user.id,
 			}));
 			this.ok(res, usersLogin);
 		} catch (error) {
+			console.log('jjjj');
 			next(new HTTPError(500, 'Внутренняя ошибка сервера'));
 		}
 	}
