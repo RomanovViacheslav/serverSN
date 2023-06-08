@@ -1,14 +1,14 @@
 import { ExceptionFilter } from './errors/exception.filter';
 import express, { Express } from 'express';
-import { Server } from 'http';
-import { LoggerService } from './logger/logger.service';
+import { Server as SocketIOServer, Socket } from 'socket.io';
+import { createServer, Server as HTTPServer } from 'http';
 import { UserController } from './users/users.controller';
+import { ChatMessageController } from './ChatMessage/chatMessage.controller';
 import { ILogger } from './logger/logger.interface';
 import { injectable, inject } from 'inversify';
 import { TYPES } from './types';
 import { json } from 'body-parser';
 import 'reflect-metadata';
-import { ConfigService } from './config/config.service';
 import { IConfigService } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
 import cors from 'cors';
@@ -17,12 +17,14 @@ import { AuthMiddleware } from './common/auth.middleware';
 @injectable()
 export class App {
 	app: Express;
-	server: Server;
+	serverIO: SocketIOServer;
+	httpServer: HTTPServer;
 	port: number;
 
 	constructor(
 		@inject(TYPES.ILogger) private logger: ILogger,
 		@inject(TYPES.UserController) private userController: UserController,
+		@inject(TYPES.ChatMessageController) private chatMessageController: ChatMessageController,
 		@inject(TYPES.ExceptionFilter) private exceptionFilter: ExceptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
@@ -41,6 +43,31 @@ export class App {
 	useRoute(): void {
 		this.app.use('/users', this.userController.router);
 	}
+
+	useWebSocket(): void {
+		this.serverIO.on('connection', (socket: Socket) => {
+			this.logger.log(`${socket.id} user connected`);
+
+			socket.on('createMessage', (message) => {
+				console.log(message);
+
+				this.chatMessageController.createMessage(socket, message);
+			});
+
+			socket.on('getMessagesBySenderId', (senderId) => {
+				this.chatMessageController.getMessagesBySenderId(socket, senderId);
+			});
+
+			socket.on('getMessagesByReceiverId', (receiverId) => {
+				this.chatMessageController.getMessagesByReceiverId(socket, receiverId);
+			});
+
+			socket.on('disconnect', () => {
+				this.logger.log(`${socket.id} отсоединен`);
+			});
+		});
+	}
+
 	useExceptionFilters(): void {
 		this.app.use(this.exceptionFilter.catch.bind(this.exceptionFilter));
 	}
@@ -50,7 +77,18 @@ export class App {
 		this.useRoute();
 		this.useExceptionFilters();
 		await this.prismaService.connect();
-		this.server = this.app.listen(this.port);
-		this.logger.log(`Сервер запущен на http://localhost:${this.port}`);
+
+		this.httpServer = createServer(this.app);
+		this.serverIO = new SocketIOServer(this.httpServer, {
+			cors: {
+				origin: 'http://localhost:3000',
+			},
+		});
+
+		this.useWebSocket();
+
+		this.httpServer.listen(this.port, () => {
+			this.logger.log(`Сервер запущен на http://localhost:${this.port}`);
+		});
 	}
 }

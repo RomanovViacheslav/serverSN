@@ -13,6 +13,11 @@ import { ConfigService } from './config/config.service';
 import { PrismaService } from './database/prisma.service';
 import { UsersRepository } from './users/users.repository';
 import { IUsersRepository } from './users/user.repository.interface';
+import { IChatMessageService } from './ChatMessage/chatMessage.service.interface';
+import { IChatMessageRepository } from './ChatMessage/chatMessage.repository.interface';
+import { ChatMessageService } from './ChatMessage/chatMessage.service';
+import { ChatMessageRepository } from './ChatMessage/chatMessage.repository';
+import { ChatMessageController } from './ChatMessage/chatMessage.controller';
 
 export interface IBootstrapReturn {
 	appContainer: Container;
@@ -28,6 +33,13 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
 	bind<IUsersRepository>(TYPES.UsersRepository).to(UsersRepository).inSingletonScope();
 	bind<App>(TYPES.Application).to(App).inSingletonScope();
+	bind<IChatMessageService>(TYPES.ChatMessageService).to(ChatMessageService).inSingletonScope();
+	bind<IChatMessageRepository>(TYPES.ChatMessageRepository)
+		.to(ChatMessageRepository)
+		.inSingletonScope();
+	bind<ChatMessageController>(TYPES.ChatMessageController)
+		.to(ChatMessageController)
+		.inSingletonScope();
 });
 
 function bootstrap(): IBootstrapReturn {

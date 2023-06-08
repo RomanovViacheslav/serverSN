@@ -8,4 +8,7 @@ export const TYPES = {
 	ConfigService: Symbol.for('ConfigService'),
 	PrismaService: Symbol.for('PrismaService'),
 	UsersRepository: Symbol.for('UsersRepository'),
+	ChatMessageService: Symbol.for('ChatMessageService'),
+	ChatMessageRepository: Symbol.for('ChatMessageRepository'),
+	ChatMessageController: Symbol.for('ChatMessageController'),
 };

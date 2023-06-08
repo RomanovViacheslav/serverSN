@@ -11,12 +11,26 @@ datasource db {
 }
 
 model UserModel {
-  id Int @id @default(autoincrement())
-  email String
-  password String
-  login String
-  name String  
-  lastName String
+  id         Int            @id @default(autoincrement())
+  email      String
+  password   String
+  login      String
+  name       String
+  lastName   String
   phoneNumber String
+
+  messagesSent   ChatMessageModel[] @relation("sender")
+  messagesReceived ChatMessageModel[] @relation("receiver")
+}
+
+model ChatMessageModel {
+  id            Int      @id @default(autoincrement())
+  content       String
+  senderId      Int
+  receiverId    Int
+  createdAt     DateTime @default(now())
+
+  sender        UserModel @relation("sender", fields: [senderId], references: [id])
+  receiver      UserModel @relation("receiver", fields: [receiverId], references: [id])
 }
 
