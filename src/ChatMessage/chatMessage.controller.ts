@@ -17,19 +17,19 @@ export class ChatMessageController extends BaseController {
 		super(loggerService);
 	}
 
-	async createMessage(socket: Socket, message: ChatMessage): Promise<void> {
+	async createMessage(serverIO: any, message: ChatMessage): Promise<void> {
 		try {
 			const result = await this.chatMessageService.createMessage(message);
 			if (!result) {
 				// Обработка ошибки создания сообщения
-				socket.emit('error', 'Не удалось создать сообщение');
+				serverIO.emit('error', 'Не удалось создать сообщение'); // Используем serverIO.emit для отправки сообщения всем подключенным пользователям
 			} else {
 				// Отправка успешного ответа клиенту
-				socket.emit('messageCreated', result);
+				serverIO.emit('messageCreated', result); // Используем serverIO.emit для отправки сообщения всем подключенным пользователям
 			}
 		} catch (error) {
 			// Обработка других ошибок
-			socket.emit('error', 'Внутренняя ошибка сервера');
+			serverIO.emit('error', 'Внутренняя ошибка сервера'); // Используем serverIO.emit для отправки сообщения всем подключенным пользователям
 		}
 	}
 
@@ -45,6 +45,8 @@ export class ChatMessageController extends BaseController {
 	async getMessagesByReceiverId(socket: Socket, receiverId: number): Promise<void> {
 		try {
 			const messages = await this.chatMessageService.getMessagesByReceiverId(receiverId);
+			console.log(messages);
+
 			socket.emit('messages', messages);
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');

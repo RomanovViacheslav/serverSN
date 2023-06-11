@@ -13,6 +13,8 @@ import { IConfigService } from './config/config.service.interface';
 import { PrismaService } from './database/prisma.service';
 import cors from 'cors';
 import { AuthMiddleware } from './common/auth.middleware';
+import { authenticateSocket } from './common/authenticateSocket';
+import { UsersRepository } from './users/users.repository';
 
 @injectable()
 export class App {
@@ -28,6 +30,7 @@ export class App {
 		@inject(TYPES.ExceptionFilter) private exceptionFilter: ExceptionFilter,
 		@inject(TYPES.ConfigService) private configService: IConfigService,
 		@inject(TYPES.PrismaService) private prismaService: PrismaService,
+		@inject(TYPES.UsersRepository) private usersRepository: UsersRepository,
 	) {
 		this.app = express();
 		this.port = 8000;
@@ -45,13 +48,19 @@ export class App {
 	}
 
 	useWebSocket(): void {
+		this.serverIO.use(async (socket, next) => {
+			try {
+				await authenticateSocket(socket, this.configService.get('SECRET'), this.usersRepository);
+				next();
+			} catch (error) {
+				next(new Error('Ошибка аутентификации'));
+			}
+		});
 		this.serverIO.on('connection', (socket: Socket) => {
 			this.logger.log(`${socket.id} user connected`);
 
 			socket.on('createMessage', (message) => {
-				console.log(message);
-
-				this.chatMessageController.createMessage(socket, message);
+				this.chatMessageController.createMessage(this.serverIO, message);
 			});
 
 			socket.on('getMessagesBySenderId', (senderId) => {
