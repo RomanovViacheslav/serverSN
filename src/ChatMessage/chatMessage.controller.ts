@@ -5,7 +5,6 @@ import { ILogger } from '../logger/logger.interface';
 import 'reflect-metadata';
 import { IChatMessageService } from './chatMessage.service.interface';
 import { ChatMessage } from './chatMessage.entity';
-import { AuthMiddleware } from '../common/auth.middleware';
 import { Socket } from 'socket.io';
 
 @injectable()
@@ -17,36 +16,24 @@ export class ChatMessageController extends BaseController {
 		super(loggerService);
 	}
 
-	async createMessage(serverIO: any, message: ChatMessage): Promise<void> {
+	async createMessage(socket: Socket, message: ChatMessage): Promise<void> {
 		try {
 			const result = await this.chatMessageService.createMessage(message);
 			if (!result) {
-				// Обработка ошибки создания сообщения
-				serverIO.emit('error', 'Не удалось создать сообщение'); // Используем serverIO.emit для отправки сообщения всем подключенным пользователям
+				socket.emit('error', 'Не удалось создать сообщение');
 			} else {
-				// Отправка успешного ответа клиенту
-				serverIO.emit('messageCreated', result); // Используем serverIO.emit для отправки сообщения всем подключенным пользователям
-			}
-		} catch (error) {
-			// Обработка других ошибок
-			serverIO.emit('error', 'Внутренняя ошибка сервера'); // Используем serverIO.emit для отправки сообщения всем подключенным пользователям
-		}
-	}
+				const receiverId = String(message.receiverId);
 
-	async getMessagesBySenderId(socket: Socket, senderId: number): Promise<void> {
-		try {
-			const messages = await this.chatMessageService.getMessagesBySenderId(senderId);
-			socket.emit('messages', messages);
+				socket.broadcast.to(receiverId).emit('messageCreated', result);
+			}
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');
 		}
 	}
 
-	async getMessagesByReceiverId(socket: Socket, receiverId: number): Promise<void> {
+	async getMessagesByUsers(socket: Socket, userAId: number, userBId: number): Promise<void> {
 		try {
-			const messages = await this.chatMessageService.getMessagesByReceiverId(receiverId);
-			console.log(messages);
-
+			const messages = await this.chatMessageService.getMessagesByUsers(userAId, userBId);
 			socket.emit('messages', messages);
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');

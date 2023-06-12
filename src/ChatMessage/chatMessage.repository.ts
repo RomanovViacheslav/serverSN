@@ -1,4 +1,4 @@
-import { ChatMessageModel } from '.prisma/client';
+import { ChatMessageModel } from '@prisma/client';
 import { ChatMessage } from './chatMessage.entity';
 import { IChatMessageRepository } from './chatMessage.repository.interface';
 import { inject, injectable } from 'inversify';
@@ -19,18 +19,13 @@ export class ChatMessageRepository implements IChatMessageRepository {
 		});
 	}
 
-	async getMessagesBySenderId(senderId: number): Promise<ChatMessageModel[]> {
+	async getMessagesByUsers(userAId: number, userBId: number): Promise<ChatMessageModel[]> {
 		return this.prismaService.client.chatMessageModel.findMany({
 			where: {
-				senderId,
-			},
-		});
-	}
-
-	async getMessagesByReceiverId(receiverId: number): Promise<ChatMessageModel[]> {
-		return this.prismaService.client.chatMessageModel.findMany({
-			where: {
-				receiverId,
+				OR: [
+					{ senderId: userAId, receiverId: userBId },
+					{ senderId: userBId, receiverId: userAId },
+				],
 			},
 		});
 	}

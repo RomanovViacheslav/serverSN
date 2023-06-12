@@ -3,6 +3,5 @@ import { ChatMessage } from './chatMessage.entity';
 
 export interface IChatMessageRepository {
 	create: (message: ChatMessage) => Promise<ChatMessageModel>;
-	getMessagesBySenderId: (senderId: number) => Promise<ChatMessageModel[]>;
-	getMessagesByReceiverId: (receiverId: number) => Promise<ChatMessageModel[]>;
+	getMessagesByUsers: (userAId: number, userBId: number) => Promise<ChatMessageModel[]>;
 }

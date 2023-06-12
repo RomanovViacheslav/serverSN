@@ -1,7 +1,7 @@
 import { ChatMessageModel } from '@prisma/client';
 import { ChatMessage } from './chatMessage.entity';
 import { IChatMessageRepository } from './chatMessage.repository.interface';
-import { injectable, inject } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
 import { IChatMessageService } from './chatMessage.service.interface';
 
@@ -12,15 +12,10 @@ export class ChatMessageService implements IChatMessageService {
 	) {}
 
 	async createMessage(message: ChatMessage): Promise<ChatMessageModel | null> {
-		// Дополнительная логика, проверки и валидация данных сообщения
 		return this.chatMessageRepository.create(message);
 	}
 
-	async getMessagesBySenderId(senderId: number): Promise<ChatMessageModel[]> {
-		return this.chatMessageRepository.getMessagesBySenderId(senderId);
-	}
-
-	async getMessagesByReceiverId(receiverId: number): Promise<ChatMessageModel[]> {
-		return this.chatMessageRepository.getMessagesByReceiverId(receiverId);
+	async getMessagesByUsers(userAId: number, userBId: number): Promise<ChatMessageModel[]> {
+		return this.chatMessageRepository.getMessagesByUsers(userAId, userBId);
 	}
 }

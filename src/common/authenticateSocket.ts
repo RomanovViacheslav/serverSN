@@ -20,7 +20,6 @@ export function authenticateSocket(
 						const user = await usersRepository.find(email);
 						if (user) {
 							socket.data.userId = user.id;
-							console.log(socket.data);
 							resolve(true);
 						} else {
 							reject(new Error('Пользователь не найден'));

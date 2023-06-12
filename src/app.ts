@@ -58,17 +58,19 @@ export class App {
 		});
 		this.serverIO.on('connection', (socket: Socket) => {
 			this.logger.log(`${socket.id} user connected`);
+			const userId = socket.data.userId;
+			socket.join(String(userId));
 
 			socket.on('createMessage', (message) => {
-				this.chatMessageController.createMessage(this.serverIO, message);
+				const newMessage = {
+					...message,
+					senderId: userId,
+				};
+				this.chatMessageController.createMessage(socket, newMessage);
 			});
 
-			socket.on('getMessagesBySenderId', (senderId) => {
-				this.chatMessageController.getMessagesBySenderId(socket, senderId);
-			});
-
-			socket.on('getMessagesByReceiverId', (receiverId) => {
-				this.chatMessageController.getMessagesByReceiverId(socket, receiverId);
+			socket.on('getMessagesByUsers', (receiverId) => {
+				this.chatMessageController.getMessagesByUsers(socket, userId, receiverId);
 			});
 
 			socket.on('disconnect', () => {
