@@ -29,4 +29,16 @@ export class ChatMessageRepository implements IChatMessageRepository {
 			},
 		});
 	}
+	async getLastMessageByChat(userAId: number, userBId: number): Promise<ChatMessageModel | null> {
+		return this.prismaService.client.chatMessageModel.findFirst({
+			where: {
+				OR: [
+					{ senderId: userAId, receiverId: userBId },
+					{ senderId: userBId, receiverId: userAId },
+				],
+			},
+			orderBy: { createdAt: 'desc' },
+			take: 1,
+		});
+	}
 }

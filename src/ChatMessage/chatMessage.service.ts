@@ -18,4 +18,7 @@ export class ChatMessageService implements IChatMessageService {
 	async getMessagesByUsers(userAId: number, userBId: number): Promise<ChatMessageModel[]> {
 		return this.chatMessageRepository.getMessagesByUsers(userAId, userBId);
 	}
+	async getLastMessageByChat(userAId: number, userBId: number): Promise<ChatMessageModel | null> {
+		return this.chatMessageRepository.getLastMessageByChat(userAId, userBId);
+	}
 }

@@ -25,6 +25,8 @@ export class ChatMessageController extends BaseController {
 				const receiverId = String(message.receiverId);
 
 				socket.broadcast.to(receiverId).emit('messageCreated', result);
+
+				socket.emit('messageCreated', result);
 			}
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');
@@ -35,6 +37,15 @@ export class ChatMessageController extends BaseController {
 		try {
 			const messages = await this.chatMessageService.getMessagesByUsers(userAId, userBId);
 			socket.emit('messages', messages);
+			this.getLastMessageByChat(socket, userAId, userBId);
+		} catch (error) {
+			socket.emit('error', 'Внутренняя ошибка сервера');
+		}
+	}
+	async getLastMessageByChat(socket: Socket, userAId: number, userBId: number): Promise<void> {
+		try {
+			const lastMessage = await this.chatMessageService.getLastMessageByChat(userAId, userBId);
+			socket.emit('lastMessage', lastMessage);
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');
 		}
