@@ -37,14 +37,13 @@ export class ChatMessageController extends BaseController {
 		try {
 			const messages = await this.chatMessageService.getMessagesByUsers(userAId, userBId);
 			socket.emit('messages', messages);
-			this.getLastMessageByChat(socket, userAId, userBId);
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');
 		}
 	}
-	async getLastMessageByChat(socket: Socket, userAId: number, userBId: number): Promise<void> {
+	async getLastMessageByChat(socket: Socket, userId: number): Promise<void> {
 		try {
-			const lastMessage = await this.chatMessageService.getLastMessageByChat(userAId, userBId);
+			const lastMessage = await this.chatMessageService.getLastMessageByChat(userId);
 			socket.emit('lastMessage', lastMessage);
 		} catch (error) {
 			socket.emit('error', 'Внутренняя ошибка сервера');

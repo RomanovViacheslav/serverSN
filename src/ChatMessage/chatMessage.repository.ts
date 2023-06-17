@@ -1,4 +1,4 @@
-import { ChatMessageModel } from '@prisma/client';
+import { ChatMessageModel, Prisma } from '@prisma/client';
 import { ChatMessage } from './chatMessage.entity';
 import { IChatMessageRepository } from './chatMessage.repository.interface';
 import { inject, injectable } from 'inversify';
@@ -29,16 +29,35 @@ export class ChatMessageRepository implements IChatMessageRepository {
 			},
 		});
 	}
-	async getLastMessageByChat(userAId: number, userBId: number): Promise<ChatMessageModel | null> {
-		return this.prismaService.client.chatMessageModel.findFirst({
+	async getLastMessageByChat(userId: number): Promise<ChatMessageModel[] | null> {
+		const distinctReceiverIds = await this.prismaService.client.chatMessageModel.findMany({
 			where: {
-				OR: [
-					{ senderId: userAId, receiverId: userBId },
-					{ senderId: userBId, receiverId: userAId },
-				],
+				OR: [{ senderId: userId }, { receiverId: userId }],
 			},
-			orderBy: { createdAt: 'desc' },
-			take: 1,
+			select: {
+				receiverId: true,
+			},
+			distinct: ['receiverId'],
 		});
+
+		const lastMessages: ChatMessageModel[] = [];
+
+		for (const { receiverId } of distinctReceiverIds) {
+			const lastMessage = await this.prismaService.client.chatMessageModel.findFirst({
+				where: {
+					OR: [
+						{ senderId: userId, receiverId },
+						{ senderId: receiverId, receiverId: userId },
+					],
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			if (lastMessage) {
+				lastMessages.push(lastMessage);
+			}
+		}
+
+		return lastMessages;
 	}
 }
