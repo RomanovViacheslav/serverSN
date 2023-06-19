@@ -30,31 +30,37 @@ export class ChatMessageRepository implements IChatMessageRepository {
 		});
 	}
 	async getLastMessageByChat(userId: number): Promise<ChatMessageModel[] | null> {
-		const distinctReceiverIds = await this.prismaService.client.chatMessageModel.findMany({
+		const distinctReceiverIds = await this.prismaService.client.userModel.findMany({
 			where: {
-				OR: [{ senderId: userId }, { receiverId: userId }],
+				OR: [
+					{ messagesSent: { some: { receiverId: userId } } },
+					{ messagesReceived: { some: { senderId: userId } } },
+				],
 			},
 			select: {
-				receiverId: true,
+				id: true,
+				messagesSent: { where: { receiverId: userId }, orderBy: { createdAt: 'desc' }, take: 1 },
+				messagesReceived: { where: { senderId: userId }, orderBy: { createdAt: 'desc' }, take: 1 },
 			},
-			distinct: ['receiverId'],
 		});
 
 		const lastMessages: ChatMessageModel[] = [];
 
-		for (const { receiverId } of distinctReceiverIds) {
-			const lastMessage = await this.prismaService.client.chatMessageModel.findFirst({
-				where: {
-					OR: [
-						{ senderId: userId, receiverId },
-						{ senderId: receiverId, receiverId: userId },
-					],
-				},
-				orderBy: { createdAt: 'desc' },
-			});
+		for (const user of distinctReceiverIds) {
+			const lastSentMessage = user.messagesSent[0];
+			const lastReceivedMessage = user.messagesReceived[0];
 
-			if (lastMessage) {
+			if (lastSentMessage && lastReceivedMessage) {
+				// Сравнивайте дату отправленного и принятого сообщений, чтобы определить последнее сообщение
+				const lastMessage =
+					lastSentMessage.createdAt > lastReceivedMessage.createdAt
+						? lastSentMessage
+						: lastReceivedMessage;
 				lastMessages.push(lastMessage);
+			} else if (lastSentMessage) {
+				lastMessages.push(lastSentMessage);
+			} else if (lastReceivedMessage) {
+				lastMessages.push(lastReceivedMessage);
 			}
 		}
 

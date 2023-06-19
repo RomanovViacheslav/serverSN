@@ -61,10 +61,6 @@ export class App {
 			const userId = socket.data.userId;
 			socket.join(String(userId));
 
-			socket.on('getLastMessages', () => {
-				this.chatMessageController.getLastMessageByChat(socket, userId);
-			});
-
 			socket.on('createMessage', (message) => {
 				const newMessage = {
 					...message,
@@ -75,6 +71,10 @@ export class App {
 
 			socket.on('getMessagesByUsers', (receiverId) => {
 				this.chatMessageController.getMessagesByUsers(socket, userId, receiverId);
+			});
+
+			socket.on('getLastMessages', () => {
+				this.chatMessageController.getLastMessageByChat(socket, userId);
 			});
 
 			socket.on('disconnect', () => {
