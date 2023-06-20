@@ -28,11 +28,12 @@ This is a simple messenger application built as a pet project. It includes both 
 
 ## Screenshots
 
-![Screenshot 2](https://i.postimg.cc/xC4DszmC/54085bdcb0e1ed87424f6088485af9a8.png)
-![Screenshot 3](https://i.postimg.cc/pV3yr9SR/7648fd957ff3efacba59868f818ddaf1.png)
-![Screenshot 4](https://i.postimg.cc/pVmpPQqs/845122674cc8e0d9644e343e730444ec.png)
-![Screenshot 5](https://i.postimg.cc/tTTGt5Yw/b0a7f46d1f66a39b07f0087dbc4e0963.png)
-![Screenshot 6](https://i.postimg.cc/nr98NhK1/d338672c234e02f702ed63c8c999da57.png)
+<a href="https://i.postimg.cc/xC4DszmC/54085bdcb0e1ed87424f6088485af9a8.png" target="_blank"><img src="https://i.postimg.cc/xC4DszmC/54085bdcb0e1ed87424f6088485af9a8.png" alt="Screenshot 2" width="200"></a>
+<a href="https://i.postimg.cc/pV3yr9SR/7648fd957ff3efacba59868f818ddaf1.png" target="_blank"><img src="https://i.postimg.cc/pV3yr9SR/7648fd957ff3efacba59868f818ddaf1.png" alt="Screenshot 3" width="200"></a>
+<a href="https://i.postimg.cc/pVmpPQqs/845122674cc8e0d9644e343e730444ec.png" target="_blank"><img src="https://i.postimg.cc/pVmpPQqs/845122674cc8e0d9644e343e730444ec.png" alt="Screenshot 4" width="200"></a>
+<a href="https://i.postimg.cc/tTTGt5Yw/b0a7f46d1f66a39b07f0087dbc4e0963.png" target="_blank"><img src="https://i.postimg.cc/tTTGt5Yw/b0a7f46d1f66a39b07f0087dbc4e0963.png" alt="Screenshot 5" width="200"></a>
+<a href="https://i.postimg.cc/nr98NhK1/d338672c234e02f702ed63c8c999da57.png" target="_blank"><img src="https://i.postimg.cc/nr98NhK1/d338672c234e02f702ed63c8c999da57.png" alt="Screenshot 6" width="200"></a>
+
 
 ## How to Run
 
