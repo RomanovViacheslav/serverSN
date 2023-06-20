@@ -28,11 +28,7 @@ This is a simple messenger application built as a pet project. It includes both 
 
 ## Screenshots
 
-<a href="https://i.postimg.cc/xC4DszmC/54085bdcb0e1ed87424f6088485af9a8.png" target="_blank"><img src="https://i.postimg.cc/xC4DszmC/54085bdcb0e1ed87424f6088485af9a8.png" alt="Screenshot 2" width="200"></a>
-<a href="https://i.postimg.cc/pV3yr9SR/7648fd957ff3efacba59868f818ddaf1.png" target="_blank"><img src="https://i.postimg.cc/pV3yr9SR/7648fd957ff3efacba59868f818ddaf1.png" alt="Screenshot 3" width="200"></a>
-<a href="https://i.postimg.cc/pVmpPQqs/845122674cc8e0d9644e343e730444ec.png" target="_blank"><img src="https://i.postimg.cc/pVmpPQqs/845122674cc8e0d9644e343e730444ec.png" alt="Screenshot 4" width="200"></a>
-<a href="https://i.postimg.cc/tTTGt5Yw/b0a7f46d1f66a39b07f0087dbc4e0963.png" target="_blank"><img src="https://i.postimg.cc/tTTGt5Yw/b0a7f46d1f66a39b07f0087dbc4e0963.png" alt="Screenshot 5" width="200"></a>
-<a href="https://i.postimg.cc/nr98NhK1/d338672c234e02f702ed63c8c999da57.png" target="_blank"><img src="https://i.postimg.cc/nr98NhK1/d338672c234e02f702ed63c8c999da57.png" alt="Screenshot 6" width="200"></a>
+<a href="https://freeimage.host/i/HPCnymv"><img src="https://iili.io/HPCnymv.th.png" alt="HPCnymv.th.png" border="0"></a> <a href="https://freeimage.host/i/HPCnpkJ"><img src="https://iili.io/HPCnpkJ.th.png" alt="HPCnpkJ.th.png" border="0"></a> <a href="https://freeimage.host/i/HPCnm7a"><img src="https://iili.io/HPCnm7a.th.png" alt="HPCnm7a.th.png" border="0"></a> <a href="https://freeimage.host/i/HPCnbdg"><img src="https://iili.io/HPCnbdg.th.png" alt="HPCnbdg.th.png" border="0"></a> <a href="https://freeimage.host/i/HPCoHIR"><img src="https://iili.io/HPCoHIR.th.png" alt="HPCoHIR.th.png" border="0"></a> <a href="https://freeimage.host/i/HPCoJXp"><img src="https://iili.io/HPCoJXp.th.png" alt="HPCoJXp.th.png" border="0"></a>
 
 
 ## How to Run
